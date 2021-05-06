@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/civo/civogo"
 	log "github.com/sirupsen/logrus"
+	"ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -16,7 +17,9 @@ type presentRequest struct {
 }
 
 func present(w http.ResponseWriter, r *http.Request) {
-	log.Infof("Received present request %s", r.Body)
+	defer r.Body.Close()
+	bytes, _ := ioutil.ReadAll(r.Body)
+	log.Infof("Received present request %s", string(bytes))
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -63,7 +66,9 @@ func present(w http.ResponseWriter, r *http.Request) {
 }
 
 func cleanup(w http.ResponseWriter, r *http.Request) {
-	log.Infof("Received cleanup request %s", r.Body)
+	defer r.Body.Close()
+	bytes, _ := ioutil.ReadAll(r.Body)
+	log.Infof("Received cleanup request %s", string(bytes))
 
 	decoder := json.NewDecoder(r.Body)
 
