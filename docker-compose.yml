@@ -1,0 +1,12 @@
+version: '3'
+services:
+  panther:
+    build: .
+    environment:
+      # CIVO_API_REGION: your region
+      # CIVO_API_TOKEN: your api token
+    volumes:
+      - ./:/go/src/github.com/valerauko/panther
+    ports:
+      - 8080:8080
+    command: go run server.go
