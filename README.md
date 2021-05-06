@@ -6,5 +6,30 @@ A small service to use as a [HTTP provider](https://go-acme.github.io/lego/dns/h
 
 ## Usage
 
-1. release into your cluster by some means and set the `CIVO_API_TOKEN` and `CIVO_API_REGION` environment variables
-2. set up your lego to use Panther's endpoint as a HTTP provider for the DNS-01 challenge
+1. you can use the [manifests](https://github.com/valerauko/panther/tree/main/manifests) to release Panther into your cluster
+1. set up your lego to use Panther's endpoint as a HTTP provider for the DNS-01 challenge
+
+The provided manifests follow the `main` branch.
+
+### Create secret
+
+If you use the provided manifests, you'll need a Secret called `civo-api-secret` in Panther's namespace as well. If you install it to `kube-system`, that could be created like this:
+
+```
+$ read TOKEN
+# <input your token from https://www.civo.com/account/security>
+
+$ read REGION
+# <input your region>
+
+$ cat <<EOF | kubectl -n kube-system apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: civo-api-secret
+data:
+  TOKEN: $(echo $TOKEN | base64)
+  REGION: $(echo $REGION | base64)
+EOF
+# secret/civo-api-secret created
+```
