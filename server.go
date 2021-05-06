@@ -118,8 +118,13 @@ func cleanup(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Successfully deleted DNS record `%s` from zone `%s`", record, zone)
 }
 
+func health(w http.ResponseWriter, r *http.Request) {
+  log.Infof("Health check OK")
+}
+
 func main() {
 	http.HandleFunc("/present", present)
 	http.HandleFunc("/cleanup", cleanup)
+	http.HandleFunc("/health", health)
 	http.ListenAndServe(":8080", nil)
 }
