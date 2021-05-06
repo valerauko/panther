@@ -2,7 +2,7 @@ name: Build and push Panther Docker image
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   create-docker-image:
