@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: create-docker-image
     steps:
+      - uses: actions/checkout@v2
       - name: Update manifests
         run: |
           sed -i -r -e "s/panther:\w+/panther:$(git rev-parse --short HEAD)" manifests/deployment.yaml
