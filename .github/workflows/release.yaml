@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Update manifests
         run: |
-          sed -i -r -e "s/panther:\w+/panther:$(git rev-parse --short HEAD)" manifests/deployment.yaml
+          sed -i -r -e "s/panther:\w+/panther:$(git rev-parse --short HEAD)/i" manifests/deployment.yaml
       - name: Commit update
         run: |
           git config user.email "actions@github.com" && \
