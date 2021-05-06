@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: panther
+  labels:
+    app: panther
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: panther
+  template:
+    metadata:
+      labels:
+        app: panther
+    spec:
+      containers:
+        - name: panther
+          image: ghcr.io/valerauko/panther:7547be5
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
