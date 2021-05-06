@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: panther
-          image: ghcr.io/valerauko/panther:6596703
+          image: ghcr.io/valerauko/panther:edafd5a
           ports:
             - name: http
               containerPort: 8080
