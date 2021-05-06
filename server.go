@@ -6,7 +6,6 @@ import (
 	"github.com/civo/civogo"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"net/http/httputil"
 	"os"
 	"strings"
 )
@@ -16,25 +15,7 @@ type presentRequest struct {
 	Value string `json:"value"`
 }
 
-func testHttp() {
-	req, _ := http.NewRequest("GET", "https://api.civo.com/v2/dns", nil)
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("CIVO_API_TOKEN")))
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Errorf("%s", err)
-	} else {
-		defer resp.Body.Close()
-		bytes, _ := httputil.DumpResponse(resp, true)
-		log.Infof(string(bytes))
-	}
-}
-
 func present(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	bytes, _ := httputil.DumpRequest(r, true)
-	log.Infof("Received present request %s", string(bytes))
-
 	decoder := json.NewDecoder(r.Body)
 
 	var body presentRequest
@@ -53,13 +34,6 @@ func present(w http.ResponseWriter, r *http.Request) {
 
 	record := strings.Split(body.Fqdn, ".")[0]
 	zone := body.Fqdn[len(record)+1 : len(body.Fqdn)-1]
-
-	_, err = client.ListKubernetesClusters()
-	if err != nil {
-		log.Errorf("Couldn't list k8s clusters either...")
-	}
-
-	testHttp()
 
 	domain, err := client.GetDNSDomain(zone)
 	if err != nil {
@@ -87,10 +61,6 @@ func present(w http.ResponseWriter, r *http.Request) {
 }
 
 func cleanup(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	bytes, _ := httputil.DumpRequest(r, true)
-	log.Infof("Received cleanup request %s", string(bytes))
-
 	decoder := json.NewDecoder(r.Body)
 
 	var body presentRequest
