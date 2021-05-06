@@ -25,7 +25,10 @@ func present(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client, err := civogo.NewClient(os.Getenv("CIVO_API_TOKEN"), os.Getenv("CIVO_API_REGION"))
+	client, err := civogo.NewClient(
+		strings.TrimSpace(os.Getenv("CIVO_API_TOKEN")),
+		strings.TrimSpace(os.Getenv("CIVO_API_REGION")),
+	)
 	if err != nil {
 		log.Errorf("Couldn't get Civo client: %s", err)
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusInternalServerError)
@@ -70,7 +73,10 @@ func cleanup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client, err := civogo.NewClient(os.Getenv("CIVO_API_TOKEN"), os.Getenv("CIVO_API_REGION"))
+	client, err := civogo.NewClient(
+		strings.TrimSpace(os.Getenv("CIVO_API_TOKEN")),
+		strings.TrimSpace(os.Getenv("CIVO_API_REGION")),
+	)
 	if err != nil {
 		log.Errorf("Couldn't get Civo client: %s", err)
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusInternalServerError)

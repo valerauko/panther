@@ -28,8 +28,8 @@ kind: Secret
 metadata:
   name: civo-api-secret
 data:
-  TOKEN: $(echo $TOKEN | base64)
-  REGION: $(echo $REGION | base64)
+  TOKEN: $(echo -n $TOKEN | base64)
+  REGION: $(echo -n $REGION | base64)
 EOF
 # secret/civo-api-secret created
 ```
