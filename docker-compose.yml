@@ -3,8 +3,8 @@ services:
   panther:
     build: .
     environment:
-      # CIVO_API_REGION: your region
-      # CIVO_API_TOKEN: your api token
+      CIVO_API_REGION: ${CIVO_API_REGION}
+      CIVO_API_TOKEN: ${CIVO_API_TOKEN}
     volumes:
       - ./:/go/src/github.com/valerauko/panther
     ports:
