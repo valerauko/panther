@@ -10,10 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build Docker image
+        id: build-image
         run: |
           set -euo pipefail
           image=valerauko/panther:$(git rev-parse --short HEAD)
           docker build -f Dockerfile.prod -t "$image" .
           echo "::set-output name=image::$image"
       - name: Push Docker image
-        run: docker push "ghcr.io/$image"
+        run: docker push "ghcr.io/${{ steps.build-image.outputs.image }}"
