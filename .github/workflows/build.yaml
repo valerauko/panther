@@ -21,4 +21,4 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | \
           docker login ghcr.io -u valerauko --password-stdin
       - name: Push Docker image
-        run: docker push "ghcr.io/${{ steps.build-image.outputs.image }}"
+        run: docker -D push "ghcr.io/${{ steps.build-image.outputs.image }}"
