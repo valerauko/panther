@@ -1,5 +1,7 @@
 # Panther 🐆
 
+![Panther](https://repository-images.githubusercontent.com/364797946/05d71b00-aebc-11eb-82e8-e506c20c8390)
+
 [![Go Report Card](https://goreportcard.com/badge/valerauko/panther)](https://goreportcard.com/report/valerauko/panther)
 
 A small service to use as a [HTTP provider](https://go-acme.github.io/lego/dns/httpreq/) for lego (or stuff that uses lego like Traefik) on Civo.
@@ -33,3 +35,7 @@ data:
 EOF
 # secret/civo-api-secret created
 ```
+
+## Credit
+
+The cover picture of the repo is by <a href="https://unsplash.com/@soberanes?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Uriel Soberanes</a> on <a href="https://unsplash.com/s/photos/panther?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>.
