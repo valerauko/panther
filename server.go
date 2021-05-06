@@ -16,7 +16,7 @@ type presentRequest struct {
 }
 
 func present(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Received present request %s", r.Body)
+	log.Infof("Received present request %s", r.Body)
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -63,7 +63,7 @@ func present(w http.ResponseWriter, r *http.Request) {
 }
 
 func cleanup(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("Received cleanup request %s", r.Body)
+	log.Infof("Received cleanup request %s", r.Body)
 
 	decoder := json.NewDecoder(r.Body)
 
