@@ -1,4 +1,4 @@
-name: Build and push Panther Docker image
+name: Release Panther Docker image
 
 on:
   push:
@@ -26,3 +26,17 @@ jobs:
           image=${{ steps.build-image.outputs.image }}
           docker tag "$image" "ghcr.io/$image"
           docker -D push "ghcr.io/$image"
+  update-manifests:
+    runs-on: ubuntu-latest
+    needs: create-docker-image
+    steps:
+      - name: Update manifests
+        run: |
+          sed -i -r -e "s/panther:\w+/panther:$(git rev-parse --short HEAD)" manifests/deployment.yaml
+      - name: Commit update
+        run: |
+          git config user.email "actions@github.com" && \
+          git config user.name "Github Action" && \
+          git add manifests/deployment.yaml && \
+          git commit -m "Update target image tag" && \
+          git push
