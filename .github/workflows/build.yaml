@@ -22,6 +22,7 @@ jobs:
           docker login ghcr.io -u valerauko --password-stdin
       - name: Push Docker image
         run: |
+          set -euo pipefail
           image=${{ steps.build-image.outputs.image }}
           docker tag "$image" "ghcr.io/$image"
           docker -D push "ghcr.io/$image"
