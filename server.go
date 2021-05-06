@@ -40,7 +40,7 @@ func present(w http.ResponseWriter, r *http.Request) {
 	record := strings.Split(body.Fqdn, ".")[0]
 	zone := body.Fqdn[len(record)+1 : len(body.Fqdn)-1]
 
-	domain, err := client.GetDNSDomain(zone)
+	domain, err := client.FindDNSDomain(zone)
 	if err != nil {
 		log.Errorf("Couldn't get DNS zone: `%s`: %s", zone, err)
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusNotFound)
