@@ -16,5 +16,9 @@ jobs:
           image=valerauko/panther:$(git rev-parse --short HEAD)
           docker build -f Dockerfile.prod -t "$image" .
           echo "::set-output name=image::$image"
+      - name: Login to GHCR
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | \
+          docker login ghcr.io -u valerauko --password-stdin
       - name: Push Docker image
         run: docker push "ghcr.io/${{ steps.build-image.outputs.image }}"
