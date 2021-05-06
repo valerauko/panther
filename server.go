@@ -18,7 +18,7 @@ type presentRequest struct {
 
 func testHttp() {
 	req, _ := http.NewRequest("GET", "https://api.civo.com/v2/dns", nil)
-	req.Header.Set("Authorization", fmt.Sprintf("bearer %s", os.Getenv("CIVO_API_TOKEN")))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("CIVO_API_TOKEN")))
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
