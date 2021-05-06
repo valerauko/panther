@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/civo/civogo"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -15,19 +16,21 @@ type presentRequest struct {
 }
 
 func present(w http.ResponseWriter, r *http.Request) {
+	log.Debugf("Received present request %s", r.Body)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var body presentRequest
 	err := decoder.Decode(&body)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}
 
 	client, err := civogo.NewClient(os.Getenv("CIVO_API_TOKEN"), os.Getenv("CIVO_API_REGION"))
 	if err != nil {
 		log.Errorf("Couldn't get Civo client: %s", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -37,7 +40,7 @@ func present(w http.ResponseWriter, r *http.Request) {
 	domain, err := client.GetDNSDomain(zone)
 	if err != nil {
 		log.Errorf("Couldn't get DNS zone: `%s`: %s", zone, err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusNotFound)
 		return
 	}
 
@@ -49,12 +52,10 @@ func present(w http.ResponseWriter, r *http.Request) {
 		TTL:      300,
 	}
 
-	log.Infof("Creating DNS record `%s` in zone `%s`", record, zone)
-
 	_, err = client.CreateDNSRecord(domain.ID, config)
 	if err != nil {
 		log.Errorf("Failed to create DNS record `%s`: %s", record, err)
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}
 
@@ -62,19 +63,21 @@ func present(w http.ResponseWriter, r *http.Request) {
 }
 
 func cleanup(w http.ResponseWriter, r *http.Request) {
+	log.Debugf("Received cleanup request %s", r.Body)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var body presentRequest
 	err := decoder.Decode(&body)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}
 
 	client, err := civogo.NewClient(os.Getenv("CIVO_API_TOKEN"), os.Getenv("CIVO_API_REGION"))
 	if err != nil {
 		log.Errorf("Couldn't get Civo client: %s", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -84,14 +87,14 @@ func cleanup(w http.ResponseWriter, r *http.Request) {
 	domain, err := client.GetDNSDomain(zone)
 	if err != nil {
 		log.Errorf("Couldn't get DNS zone: `%s`: %s", zone, err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusNotFound)
 		return
 	}
 
 	records, err := client.ListDNSRecords(domain.ID)
 	if err != nil {
 		log.Errorf("Couldn't get DNS records: %s", err)
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusNotFound)
 		return
 	}
 
@@ -105,13 +108,13 @@ func cleanup(w http.ResponseWriter, r *http.Request) {
 	res, err := client.DeleteDNSRecord(&existingRecord)
 	if err != nil {
 		log.Errorf("Couldn't delete DNS record `%s`: %s", record, err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusInternalServerError)
 		return
 	}
 
 	if res.Result != "success" {
 		log.Errorf("Couldn't delete DNS record `%s`: %s", record, res)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("%s", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -119,7 +122,7 @@ func cleanup(w http.ResponseWriter, r *http.Request) {
 }
 
 func health(w http.ResponseWriter, r *http.Request) {
-  log.Infof("Health check OK")
+	log.Infof("Health check OK")
 }
 
 func main() {
